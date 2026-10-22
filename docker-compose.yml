@@ -1,0 +1,75 @@
+name: orderflow
+
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: orderflow-sqlserver
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Coti@2026"
+      MSSQL_PID: "Developer"
+
+    ports:
+      - "1434:1433"
+
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+    networks:
+      - orderflow-network
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Coti@2026' -C -Q 'SELECT 1' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    restart: unless-stopped
+
+
+  adminer:
+    image: adminer:latest
+    container_name: orderflow-adminer
+
+    ports:
+      - "5051:8080"
+
+    volumes:
+      - adminer_data:/var/lib/php/sessions
+
+    networks:
+      - orderflow-network
+
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "php -r \"exit(@fsockopen('localhost', 8080) ? 0 : 1);\""
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    restart: unless-stopped
+
+
+volumes:
+  sqlserver_data:
+  adminer_data:
+
+
+networks:
+  orderflow-network:
+    driver: bridge
