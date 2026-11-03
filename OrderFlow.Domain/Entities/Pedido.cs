@@ -50,6 +50,8 @@ namespace OrderFlow.Domain.Entities
 
             if (percentual < 0 || percentual > 20)
                 throw new InvalidOperationException("O desconto deve estar entre 0% e 20%.");
+
+            PercentualDesconto = percentual;
         }
 
         public void Confirmar()

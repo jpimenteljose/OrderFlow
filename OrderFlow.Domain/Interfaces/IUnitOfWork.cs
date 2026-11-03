@@ -7,9 +7,7 @@ namespace OrderFlow.Domain.Interfaces
     public interface IUnitOfWork
     {
         IPedidoRepository PedidoRepository { get; }
-
         IItemPedidoRepository ItemPedidoRepository { get; }
-
         Task SaveChangesAsync();
     }
 }
