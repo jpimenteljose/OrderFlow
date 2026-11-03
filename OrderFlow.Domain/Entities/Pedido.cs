@@ -38,7 +38,7 @@ namespace OrderFlow.Domain.Entities
             if (Status != StatusPedido.Criado)
                 throw new InvalidOperationException("Somente produtos criados podem receber itens.");
 
-            var item = new ItemPedido(Id, produto, quantidade, precoUnitario);
+            var item = new ItemPedido((Guid)this.Id, produto, quantidade, precoUnitario);
 
             _itens.Add(item);
         }
