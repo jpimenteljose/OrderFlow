@@ -10,10 +10,10 @@ builder.Services.AddDependencyInjection();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.MapOpenApi();
-}
+//}
 
 app.UseSwaggerConfig(); // executar o Swagger
 app.UseAuthorization();
